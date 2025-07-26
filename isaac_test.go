@@ -32,7 +32,7 @@ func TestZeros(t *testing.T) {
 					scanner.Scan()
 					buf.Reset()
 				} else {
-					fmt.Printf("o: " + output + "\n" + "v: " + scanner.Text() + "\n")
+					fmt.Printf("o: %s\nv: %s\n", output, scanner.Text())
 					t.Fail()
 					return
 				}
@@ -64,7 +64,7 @@ func TestSeed(t *testing.T) {
 				buf.Reset()
 			} else {
 				fmt.Printf("index: %d\n", i)
-				fmt.Printf("o: " + output + "\n" + "v: " + keyScan.Text() + "\n")
+				fmt.Printf("o: %s\nv: %s\n", output, keyScan.Text())
 				t.Fail()
 				return
 			}
@@ -96,7 +96,7 @@ func TestRand(t *testing.T) {
 					outScan.Scan()
 					buf.Reset()
 				} else {
-					fmt.Printf("o: " + outScan.Text() + "\n" + "v: " + buf.String() + "\n")
+					fmt.Printf("o: %s\nv: %s\n", outScan.Text(), buf.String())
 					t.Fail()
 					return
 				}
