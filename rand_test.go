@@ -26,7 +26,7 @@ func TestSeededMemory(t *testing.T) {
 	if err != nil {
 		t.Fatalf("failed to read keytest.txt: %v", err)
 	}
-	expected := strings.Split(string(b), "\n")[:32]
+	expected := strings.Split(strings.ReplaceAll(string(b), "\r\n", "\n"), "\n")[:32]
 
 	// transform the required seed string into a usable seed slice
 	seed, err := TransformSeed("This is <i>not</i> the right mytext.")
@@ -147,7 +147,7 @@ func TestWithSeed(t *testing.T) {
 	if err != nil {
 		t.Fatalf("failed to read randseed.txt: %v", err)
 	}
-	expected := strings.Split(string(b), "\n")[:320]
+	expected := strings.Split(strings.ReplaceAll(string(b), "\r\n", "\n"), "\n")[:320]
 
 	// transform the required seed string into a usable seed slice
 	seed, err := TransformSeed("This is <i>not</i> the right mytext.")
@@ -203,7 +203,7 @@ func TestZeroSeed(t *testing.T) {
 	if err != nil {
 		t.Fatalf("failed to read randvect.txt: %v", err)
 	}
-	expected := strings.Split(string(b), "\n")[:64]
+	expected := strings.Split(strings.ReplaceAll(string(b), "\r\n", "\n"), "\n")[:64]
 
 	// create the pseudorandom number generate with no seed (all zeros, by default)
 	r := NewRand()
