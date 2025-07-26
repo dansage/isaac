@@ -1,0 +1,51 @@
+# set a name for the workflow
+name: tests
+
+# run the tests on each pull request and push
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    types: [opened, synchronize, reopened]
+
+# define the jobs
+jobs:
+  tests:
+    name: Run tests
+
+    # continue running the tests if one variant fails
+    continue-on-error: true
+
+    # define the platforms and toolsets to run the tests on
+    strategy:
+      matrix:
+        # use the current stable versions of Go
+        go:
+          - 'stable'
+
+        # use Ubuntu to run the tests
+        platform:
+          - macos-latest
+          - ubuntu-latest
+          - windows-latest
+
+    # set the current platform
+    runs-on: ${{ matrix.platform }}
+
+    # define the steps for the operation
+    steps:
+      - name: checkout the code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: set up Go
+        uses: actions/setup-go@v5
+        with:
+          go-version: ${{ matrix.go }}
+
+      - name: run tests
+        run: go test -v ./...
+        env:
+          ENV: testing
