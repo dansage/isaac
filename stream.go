@@ -4,16 +4,23 @@ import (
 	"bytes"
 	"crypto/cipher"
 	"encoding/binary"
+	"fmt"
 )
 
-/* implementation based on http://golang.org/src/pkg/crypto/cipher/ctr.go */
-func (r *ISAAC) XORKeyStream(dst, src []byte) {
+// Stream is a cipher stream that implements the ISAAC algorithm when generating keys for each operation.
+type Stream struct {
+	*Rand
+}
+
+// XORKeyStream XORs each byte in the given slice with a byte from the cipher's key stream. Dst and src must overlap
+// entirely or not at all.
+func (s *Stream) XORKeyStream(dst, src []byte) {
 	keyStream := new(bytes.Buffer)
 	for len(src) > 0 {
 		keyStream.Reset()
 
 		// unpacking
-		nextUint32 := r.Rand()
+		nextUint32 := s.Uint32()
 		binary.Write(keyStream, binary.BigEndian, &nextUint32)
 		n := safeXORBytes(dst, src, keyStream.Bytes())
 
@@ -33,8 +40,14 @@ func safeXORBytes(dst, a, b []byte) int {
 	return n
 }
 
-func NewISAACStream(key string) cipher.Stream {
-	stream := new(ISAAC)
-	stream.Seed(key)
-	return stream
+// NewStream initializes a new cipher stream with the specified key.
+func NewStream(key string) (cipher.Stream, error) {
+	seed, err := TransformSeed(key)
+	if err != nil {
+		return nil, fmt.Errorf("failed to transform seed string %q: %w", key, err)
+	}
+	stream := &Stream{
+		Rand: NewRand(seed...),
+	}
+	return stream, nil
 }
