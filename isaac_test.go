@@ -10,7 +10,7 @@ import (
 
 /* This tests against the official randvect.txt, which outputs two rounds with no key (zeros) */
 func TestZeros(t *testing.T) {
-	vect, err := os.Open("randvect.txt")
+	vect, err := os.Open("testdata/randvect.txt")
 	if err != nil {
 		t.Error("could not find text vector file")
 	}
@@ -44,7 +44,7 @@ func TestZeros(t *testing.T) {
 /* This tests against the randrsl state of randtest.c after randInit()
  * to make sure that my seeding procedure works the same as the reference */
 func TestSeed(t *testing.T) {
-	keyVector, _ := os.Open("keytest.txt")
+	keyVector, _ := os.Open("testdata/keytest.txt")
 	defer keyVector.Close()
 
 	keyScan := bufio.NewScanner(keyVector)
@@ -74,7 +74,7 @@ func TestSeed(t *testing.T) {
 
 /* This tests output against the official randseed.txt */
 func TestRand(t *testing.T) {
-	testVector, _ := os.Open("randseed.txt")
+	testVector, _ := os.Open("testdata/randseed.txt")
 	defer testVector.Close()
 
 	outScan := bufio.NewScanner(testVector)
